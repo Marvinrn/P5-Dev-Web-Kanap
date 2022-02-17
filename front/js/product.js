@@ -47,47 +47,48 @@ const showProductsDetails = async () => {
         option.value = colors[i];
         select.appendChild(option);
     }
-
-    addToCart(productDetails);
 };
 showProductsDetails();
 
 
 
-const addToCart = () => {
-    let btn = document.getElementById('addToCart')
-    btn.addEventListener('click', () => {
-        let select = document.getElementById('colors');
-        let quantity = document.getElementById('quantity');
+let btn = document.getElementById('addToCart')
+btn.addEventListener('click', () => {
+    let color = document.getElementById('colors').value;
+    let quantity = parseInt(document.getElementById('quantity').value);
+    let cart = JSON.parse(localStorage.getItem("cart"));
 
-        const returnedValue = Object.assign( productDetails, {
-            colors : `${select.value}`,
-            quantity: `${quantity.value}`,
-        })
-
-        console.log(returnedValue);
-
-        let cart = JSON.parse(localStorage.getItem("product"));
-
-        if (cart == null) {
-            cart = [];
-            cart.push(productDetails)
-            console.log(cart);
-            localStorage.setItem('product', JSON.stringify(cart))
-
-        } else{
-            cart.push(productDetails)
-            console.log(cart);
-            localStorage.setItem('product', JSON.stringify(cart))
+    if (cart == null) {
+        //si cart vide crée un nouveau cart 
+        cart = {
+            [product_id]: {
+                [color]: quantity
+            }
         }
-    })
-}
+    } else {
+        // on cherche a savoir si dans le cart on a deja notre produit 
+        if (cart[product_id]) {
+            //si oui, on regarde si on a deja la couleur sélectionnée dans notre cart
+            if (cart[product_id][color]) {
+                // si oui, on ajoute à cette quantité qu'on à deja une quantité supplémentaire choisi
+                cart[product_id][color] += quantity
+            } else {
+                // sinon, on crée une nouvelle couleur avec sa quantité choisi de base
+                cart[product_id][color] = quantity
+            }
+        } else {
+            // si le produit n'existe pas (pas de quantité ni de couleur ni d'id) alors on le crée comme au debut
+            cart[product_id] = {
+                    [color]: quantity
+                }
+            
+        }
+    }
+    localStorage.setItem('cart', JSON.stringify(cart))
+})
 
 
 
-/*const addToCart = () => {
-
-}*/
 
 
 
