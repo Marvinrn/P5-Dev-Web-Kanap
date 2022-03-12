@@ -7,7 +7,7 @@ let totalQuantity = 0;
 
 
 function renderCart (){
-    quantity = document.getElementsByClassName('itemQuantity');
+    //quantity = document.getElementsByClassName('itemQuantity');
     itemContainers.innerHTML = '';
     for (let key in cart) {
         fetch(`http://localhost:3000/api/products/${key}`)
@@ -38,8 +38,8 @@ function renderCart (){
                         </article>`
                     );
                     
-                    // calcul et affichage de la quantité totale du panier (parseFloat permet de transformer une chaîne de caractères en un nombre flottant après avoir analysée celle-ci)
-                    totalQuantity += cart[key][colorKey];
+                    // calcul et affichage de la quantité totale du panier 
+                    totalQuantity += parseInt(cart[key][colorKey]);
                     document.getElementById('totalQuantity').innerHTML = `${totalQuantity}`
                     
                     //calcul et affichage du prix total du panier
@@ -47,12 +47,14 @@ function renderCart (){
                     document.getElementById('totalPrice').innerHTML = `${totalPrice}`
 
                     handleQuantity();
+                    handleDelete();
                     
                 }
             });
         }
 }
 
+// change et actualise la quantité des produits dans le cart 
 function handleQuantity(){
     // changement de la quantité via input
     for (let i = 0; i < quantity.length; i++) {
@@ -61,9 +63,40 @@ function handleQuantity(){
             let el = e.target.closest('article');
             quantityChange = e.target.value
             cart[el.dataset.id][el.dataset.color] = quantityChange
+
+            // supprime le produit si quantité est nulle 
+            if(quantityChange == 0){
+                delete cart[el.dataset.id][el.dataset.color]
+
+                if (Object.keys(cart[el.dataset.id]).length == 0) {
+                    delete cart[el.dataset.id]
+                }
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart))
+            //renderCart();
+            location.reload();
+        })
+    }
+}
+
+
+// supprime item du cart
+function handleDelete (){
+    for (let i = 0; i < deleteItemsBtn.length; i++) {
+        deleteItemsBtn[i].addEventListener('click', (e) => {
+            e.preventDefault();
+            let el = e.target.closest('article');
+            delete cart[el.dataset.id][el.dataset.color]
+
+                if (Object.keys(cart[el.dataset.id]).length == 0) {
+                    delete cart[el.dataset.id]
+                }
+            
             
             localStorage.setItem('cart', JSON.stringify(cart))
             renderCart();
+            location.reload();
         })
     }
 }
