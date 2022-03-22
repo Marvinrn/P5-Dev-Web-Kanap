@@ -86,3 +86,74 @@ function deleteItem(target) {
 }
 
 renderCart();
+
+//Form
+
+function getFormData() {
+    let form = document.getElementsByClassName('cart__order__form')
+
+    let firstName = document.getElementById('firstName')
+    let lastName = document.getElementById('lastName')
+    let address = document.getElementById('address')
+    let city = document.getElementById('city')
+    let email = document.getElementById('email')
+
+    let firstNameErrorMsg = document.getElementById('firstNameErrorMsg')
+    let lastNameErrorMsg = document.getElementById('lastNameErrorMsg')
+    let addressErrorMsg = document.getElementById('addressErrorMsg')
+    let cityErrorMsg = document.getElementById('cityErrorMsg')
+    let emailErrorMsg = document.getElementById('emailErrorMsg')
+
+
+    let regFirstName = new RegExp(/^[a-zA-Z]{2,25}$/g)
+    let regLastName = new RegExp(/^[a-zA-Z\s]{2,40}$/g)
+    let regAddress = new RegExp(/^[a-zA-Z0-9\s]{2,40}$/g)
+    let regCity = new RegExp(/^[a-zA-Z\s]{2,40}$/g)
+    let regEmail = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g)
+
+
+    form[0].addEventListener('submit', (e) => {
+        let order = {
+            contact: {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                address: address.value,
+                city: city.value,
+                email: email.value
+            },
+            // pour récupérer les keys (id) du cart
+            products: Object.keys(cart)
+        }
+
+
+        if (!regFirstName.test(firstName.value)) {
+            firstNameErrorMsg.innerHTML = 'Veuillez renseigner un prénom valide'
+        }
+
+        if (!regLastName.test(lastName.value)) {
+            lastNameErrorMsg.innerHTML = 'Veuillez renseigner un nom valide'
+        }
+
+        if (!regAddress.test(city.value)) {
+            addressErrorMsg.innerHTML = 'Veuillez renseigner une adresse valide'
+        }
+
+        if (!regCity.test(city.value)) {
+            cityErrorMsg.innerHTML = 'Veuillez renseigner une ville valide'
+        }
+
+        if (!regEmail.test(email.value)) {
+            emailErrorMsg.innerHTML = 'Veuillez renseigner un email valide'
+        }
+
+        
+
+        localStorage.setItem('order', JSON.stringify(order))
+        e.preventDefault()
+        console.log(localStorage.getItem('order'));
+    })
+}
+
+getFormData();
+
+
