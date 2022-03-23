@@ -157,16 +157,17 @@ function getFormData() {
 
         
         if(error == 0){
+            // si pas d'erreur on envoie le formulaire et les produits a l'api pour recevoir un order-id
             fetch('http://localhost:3000/api/products/order', 
             {method: 'POST', 
             body: JSON.stringify(order),
             headers: {
-                'Accept': 'application/json', 
                 "Content-Type": "application/json" 
             },
         })
             .then((response) => response.json())
             .then(console.log);
+            // faire la redirection vers la page de confirmation
 
 
 
