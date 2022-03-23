@@ -98,13 +98,17 @@ function getFormData() {
     let city = document.getElementById('city')
     let email = document.getElementById('email')
 
+    
     let firstNameErrorMsg = document.getElementById('firstNameErrorMsg')
     let lastNameErrorMsg = document.getElementById('lastNameErrorMsg')
     let addressErrorMsg = document.getElementById('addressErrorMsg')
     let cityErrorMsg = document.getElementById('cityErrorMsg')
     let emailErrorMsg = document.getElementById('emailErrorMsg')
 
+    // initialisation de error = 0 pour envoie du post if(error == 0)
+    let error = 0;
 
+    // initialisation des regex
     let regFirstName = new RegExp(/^[a-zA-Z]{2,25}$/g)
     let regLastName = new RegExp(/^[a-zA-Z\s]{2,40}$/g)
     let regAddress = new RegExp(/^[a-zA-Z0-9\s]{2,40}$/g)
@@ -127,25 +131,48 @@ function getFormData() {
 
 
         if (!regFirstName.test(firstName.value)) {
+            error++;
             firstNameErrorMsg.innerHTML = 'Veuillez renseigner un prénom valide'
         }
 
         if (!regLastName.test(lastName.value)) {
+            error++;
             lastNameErrorMsg.innerHTML = 'Veuillez renseigner un nom valide'
         }
 
-        if (!regAddress.test(city.value)) {
+        if (!regAddress.test(address.value)) {
+            error++;
             addressErrorMsg.innerHTML = 'Veuillez renseigner une adresse valide'
         }
 
         if (!regCity.test(city.value)) {
+            error++;
             cityErrorMsg.innerHTML = 'Veuillez renseigner une ville valide'
         }
 
         if (!regEmail.test(email.value)) {
+            error++;
             emailErrorMsg.innerHTML = 'Veuillez renseigner un email valide'
         }
 
+        
+        if(error == 0){
+            fetch('http://localhost:3000/api/products/order', 
+            {method: 'POST', 
+            body: JSON.stringify(order),
+            headers: {
+                'Accept': 'application/json', 
+                "Content-Type": "application/json" 
+            },
+        })
+            .then((response) => response.json())
+            .then(console.log);
+
+
+
+        }else{
+            console.log('try again');
+        }
         
 
         localStorage.setItem('order', JSON.stringify(order))
