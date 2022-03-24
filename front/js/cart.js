@@ -129,7 +129,7 @@ function getFormData() {
             products: Object.keys(cart)
         }
 
-
+        //validation des champs du formulaire avec reg.test
         if (!regFirstName.test(firstName.value)) {
             error++;
             firstNameErrorMsg.innerHTML = 'Veuillez renseigner un prénom valide'
@@ -161,14 +161,18 @@ function getFormData() {
             fetch('http://localhost:3000/api/products/order', 
             {method: 'POST', 
             body: JSON.stringify(order),
+            // demander des explications sur ce segment trouvé sur google
             headers: {
                 "Content-Type": "application/json" 
             },
         })
             .then((response) => response.json())
-            .then(console.log);
+            .then((data) => {
+                console.log(data);
+                localStorage.setItem("orderId", data.orderId);
             // faire la redirection vers la page de confirmation
-
+             window.location.href = 'confirmation.html'
+            })
 
 
         }else{
