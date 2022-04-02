@@ -1,12 +1,13 @@
 const items = document.getElementById('items');
 let products;
 
+// appel de l'api avec fetch 
 const fetchProducts = async () => {
   products = await fetch('http://localhost:3000/api/products')
     .then(res => res.json());
 }
 
-
+// fonction pour afficher nos produits
 const showProducts = async () => {
   await fetchProducts();
 

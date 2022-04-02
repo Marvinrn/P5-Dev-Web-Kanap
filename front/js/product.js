@@ -8,21 +8,19 @@ const description = document.getElementById('description');
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const product_id = urlParams.get('id')
-//console.log(product_id);
 
 let productDetails = [];
 
-
+//appel de l'api avec fetch
 const fetchProductsDetails = async () => {
     await fetch(`http://localhost:3000/api/products/${product_id}`)
         .then(res => res.json())
         .then((res) => {
             productDetails = res
-            /*console.log(productDetails)*/;
         });
 };
 
-
+// fonction qui affiche les produits ainsi que les details (prix,nom, image, select etc)
 const showProductsDetails = async () => {
     await fetchProductsDetails();
 
@@ -51,11 +49,15 @@ const showProductsDetails = async () => {
 showProductsDetails();
 
 
-
+// btn onclick event pour sauvegarder dans le localstorage les data du cart (produit + couleur + quantité)
 let btn = document.getElementById('addToCart')
 btn.addEventListener('click', () => {
     let color = document.getElementById('colors').value;
     let quantity = parseInt(document.getElementById('quantity').value);
+    if(quantity == 0 || color == ''){
+        return
+    }
+
     let cart = JSON.parse(localStorage.getItem("cart"));
 
     if (cart == null) {

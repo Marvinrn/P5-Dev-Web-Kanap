@@ -5,7 +5,7 @@ let deleteItemsBtn = document.getElementsByClassName('deleteItem');
 let totalPrice = 0;
 let totalQuantity = 0;
 
-
+// fonction pour afficher nos éléments du cart 
 function renderCart() {
     totalPrice = 0;
     totalQuantity = 0;
@@ -87,36 +87,34 @@ function deleteItem(target) {
 
 renderCart();
 
-//Form
-
+//Fonction pour gérer le formulaire + envoie des données du formulaire a l'api pour recevoir code de confirmation
 function getFormData() {
     let form = document.getElementsByClassName('cart__order__form')
 
-    let firstName = document.getElementById('firstName')
-    let lastName = document.getElementById('lastName')
-    let address = document.getElementById('address')
-    let city = document.getElementById('city')
-    let email = document.getElementById('email')
-
-    
-    let firstNameErrorMsg = document.getElementById('firstNameErrorMsg')
-    let lastNameErrorMsg = document.getElementById('lastNameErrorMsg')
-    let addressErrorMsg = document.getElementById('addressErrorMsg')
-    let cityErrorMsg = document.getElementById('cityErrorMsg')
-    let emailErrorMsg = document.getElementById('emailErrorMsg')
-
-    // initialisation de error = 0 pour envoie du post if(error == 0)
-    let error = 0;
-
-    // initialisation des regex
-    let regFirstName = new RegExp(/^[a-zA-Z]{2,25}$/g)
-    let regLastName = new RegExp(/^[a-zA-Z\s]{2,40}$/g)
-    let regAddress = new RegExp(/^[a-zA-Z0-9\s]{2,40}$/g)
-    let regCity = new RegExp(/^[a-zA-Z\s]{2,40}$/g)
-    let regEmail = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g)
-
-
     form[0].addEventListener('submit', (e) => {
+        let firstName = document.getElementById('firstName')
+        let lastName = document.getElementById('lastName')
+        let address = document.getElementById('address')
+        let city = document.getElementById('city')
+        let email = document.getElementById('email')
+
+
+        let firstNameErrorMsg = document.getElementById('firstNameErrorMsg')
+        let lastNameErrorMsg = document.getElementById('lastNameErrorMsg')
+        let addressErrorMsg = document.getElementById('addressErrorMsg')
+        let cityErrorMsg = document.getElementById('cityErrorMsg')
+        let emailErrorMsg = document.getElementById('emailErrorMsg')
+
+        // initialisation de error = 0 pour envoie du post if(error == 0)
+        let error = 0;
+
+        // initialisation des regex
+        let regFirstName = new RegExp(/^[a-zA-Z]{2,25}$/g)
+        let regLastName = new RegExp(/^[a-zA-Z\s]{2,40}$/g)
+        let regAddress = new RegExp(/^[a-zA-Z0-9\s]{2,40}$/g)
+        let regCity = new RegExp(/^[a-zA-Z\s]{2,40}$/g)
+        let regEmail = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g)
+
         let order = {
             contact: {
                 firstName: firstName.value,
@@ -155,34 +153,29 @@ function getFormData() {
             emailErrorMsg.innerHTML = 'Veuillez renseigner un email valide'
         }
 
-        
-        if(error == 0){
+
+        if (error == 0) {
             // si pas d'erreur on envoie le formulaire et les produits a l'api pour recevoir un order-id
-            fetch('http://localhost:3000/api/products/order', 
-            {method: 'POST', 
-            body: JSON.stringify(order),
-            // demander des explications sur ce segment trouvé sur google
-            headers: {
-                "Content-Type": "application/json" 
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-                localStorage.setItem("orderId", data.orderId);
-            // faire la redirection vers la page de confirmation
-             window.location.href = 'confirmation.html'
-            })
+            fetch('http://localhost:3000/api/products/order',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(order),
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    // redirection vers la page de confirmation et met l'orderId dans l'url
+                    window.location.href = `confirmation.html?orderId=${data.orderId}`
+                })
 
 
-        }else{
-            console.log('try again');
         }
-        
+
 
         localStorage.setItem('order', JSON.stringify(order))
         e.preventDefault()
-        console.log(localStorage.getItem('order'));
     })
 }
 
