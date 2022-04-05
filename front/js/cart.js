@@ -154,8 +154,8 @@ function getFormData() {
         }
 
 
-        if (error == 0) {
-            // si pas d'erreur on envoie le formulaire et les produits a l'api pour recevoir un order-id
+        // si pas d'erreur et que le cart n'est pas vide, on envoie le formulaire et les produits a l'api pour recevoir un order-id
+        if (error == 0 && cart) {
             fetch('http://localhost:3000/api/products/order',
                 {
                     method: 'POST',
